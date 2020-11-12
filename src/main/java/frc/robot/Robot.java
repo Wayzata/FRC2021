@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
       case "Boring":
       default:
         if(crossedLine) {
-          driveTrain.targetGoal(joy);
+          driveTrain.targetGoalWithRange(joy);
         }
         else {
           driveTrain.backUp();
@@ -173,40 +173,41 @@ public class Robot extends TimedRobot {
     }
     else {
       if(joy.getRawButton(10)) {
-        intake.setFullShoot(true);
+        intake.setFullConvey(true);
       }
       else {
         intake.setFullShoot(false);
+        intake.setFullConvey(false);
         intake.spinUpShooter(false, 0);
         intake.checkIntake(joy.getRawButton(2), joy.getRawButton(9));   
       }
       driveTrain.mecDrive(joy);
       driveTrain.resetErrors();
-      //limeTable.getEntry("ledMode").setNumber(1);
+      limeTable.getEntry("ledMode").setNumber(1);
     }
 
     
-    if(joy.getRawButton(5)) {
-      intake.setColorFlapUp();
-    }
-    else if(joy.getRawButton(6)) {
-      intake.setColorFlapDown();
-    }
-    else {
-      intake.setColorFlap(0);
-    }
+    // if(joy.getRawButton(5)) {
+    //   intake.setColorFlapUp();
+    // }
+    // else if(joy.getRawButton(6)) {
+    //   intake.setColorFlapDown();
+    // }
+    // else {
+    //   intake.setColorFlap(0);
+    // }
 
-    if(joy.getRawButton(11)) {
-      String gameData = "Y";
-      controlPanel.getColor(gameData);
-      controlPanel.stopOnColor();
-    }
-    else if(joy.getRawButtonPressed(12)) {
-      controlPanel.spinFourTimes();
-    }
-    else {
-      //controlPanel.setColorWheel(0);
-    }
+    // if(joy.getRawButton(11)) {
+    //   String gameData = "Y";
+    //   controlPanel.getColor(gameData);
+    //   controlPanel.stopOnColor();
+    // }
+    // else if(joy.getRawButtonPressed(12)) {
+    //   controlPanel.spinFourTimes();
+    // }
+    // else {
+    //   //controlPanel.setColorWheel(0);
+    // }
     
   }
 

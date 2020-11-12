@@ -48,6 +48,8 @@ public class DriveTrain {
 
     MecanumDrive mDrive;
 
+    MecanumDrive m_Drive;
+
     NetworkTable limeTable;
 
     boolean shooting = false;
@@ -174,6 +176,88 @@ public class DriveTrain {
         }
     }
 
+    public void targetGoalWithRange(Joystick joy) {
+        tv = limeTable.getEntry("tv").getDouble(0);
+        tx = limeTable.getEntry("tx").getDouble(0);
+        ty = limeTable.getEntry("ty").getDouble(0);
+        ta = limeTable.getEntry("ta").getDouble(0);
+        ts = limeTable.getEntry("ts").getDouble(0);
+
+        Robot.intake.spinUpShooter(true, ty);
+        if (tv == 1) {
+            if (xIsAcceptable(tx)) {
+                zAdjust = 0;
+            } else { // Do the PID calculations for the spin-value
+                integralZ += (tx * 0.027);
+                derivZ = (tx - priorEZ) / 0.027;
+                zAdjust = (kP_z * tx) + (kI_z * integralZ) + (kD_z * derivZ);
+                priorEZ = tx;
+
+                // Add feed-forward value
+                if (zAdjust > 0) {
+                    zAdjust += kF_z;
+                } else {
+                    zAdjust -= kF_z;
+                }
+
+                // Check max/min bounds
+                if (zAdjust > speed) {
+                    zAdjust = speed;
+                } else if (zAdjust < -speed) {
+                    zAdjust = -speed;
+                }
+            }
+
+            if (yIsAcceptable(ty)) {
+                yAdjust = 0;
+            } else { // Do the PID calculations for the drive-value
+                yAdjust = -(kP_y * ty);
+
+                // Add feed-forward value
+                if (yAdjust > 0) {
+                    yAdjust += kF_y;
+                } else {
+                    yAdjust -= kF_y;
+                }
+
+                // Check max/min bounds
+                if (yAdjust > speed) {
+                    yAdjust = speed;
+                } else if (yAdjust < -speed) {
+                    yAdjust = -speed;
+                }
+            }
+        } else { // If no target is in sight, spin until one is found
+            zAdjust = 0;
+            yAdjust = 0;
+            xAdjust = 0;
+        }
+
+        // Set drivetrain to the calculated values ////NOTE: xAdjust is not currently
+        // being used, it is always zero // maybe add back y :)
+        mDrive.driveCartesian(0, yAdjust, zAdjust);
+
+        if(xIsAcceptable(tx)) { //  && yIsAcceptable(ty)
+            if(shooting) {
+                if(System.currentTimeMillis() - startShootTime > 5000) {
+                    Robot.intake.setFullConvey(false);
+                }
+                else if(System.currentTimeMillis() - startShootTime > 1000) {
+                    Robot.intake.setFullConvey(true);
+                }
+                else {
+                    Robot.intake.setFullConvey(false);
+                }
+            }
+            else {
+                shooting = true;
+                startShootTime = System.currentTimeMillis();
+            }
+        }
+        else {
+        }
+    }
+
     // private void targetThenShoot(boolean bPressed) {
     //     tv = limeTable.getEntry("tv").getDouble(0);
     //     tx = limeTable.getEntry("tx").getDouble(0);
@@ -200,7 +284,7 @@ public class DriveTrain {
     // }
 
     private boolean xIsAcceptable(double value) {
-        return (value > -1.5) && (value < 1.5);
+        return (value > -1) && (value < 1);
     }
 
     private boolean yIsAcceptable(double value) {
@@ -216,7 +300,7 @@ public class DriveTrain {
     }
 
     public void backUp() {
-        if(System.currentTimeMillis() - startBackUpTime > 1000) {
+        if(System.currentTimeMillis() - startBackUpTime > 650) {
             Robot.crossedLine = true;
             mDrive.driveCartesian(0, 0, 0);
         }

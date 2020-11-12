@@ -17,15 +17,14 @@ public class Variables {
     public static final int climbMotorPort = 7;
     public static final int controlMotorPort = 11;
     public static final int colorArmPort = 12;
-
     // Index Speed Amounts
-    public static final double intakeMotorSpeed = -0.55;
-    public static final double conveyorIndexSpeed = 0.90;
+    public static final double intakeMotorSpeed = -0.50;
+    public static final double conveyorIndexSpeed = 1.0;
     public static final double feedIndexSpeed = 1.0;
 
     // Climbing Motor Speeds
     public static final double raiseMotorUpSpeed = 1;
-    public static final double raiseMotorDownSpeed = -0.65;
+    public static final double raiseMotorDownSpeed = -0.50;
     public static final double climbMotorUpSpeed = -1.0;
     public static final double climbMotorDownSpeed = 1.0;
 
@@ -61,6 +60,8 @@ public class Variables {
     // Shooter Speed Gain
     //public static final double shooterDistanceNear_kP = -(1.0 / 11.0); //Fix value?
     public static final double shooterDistanceMiddle_kP = -(1.0 / 12.8);
-    public static final double shooterDistanceFar_kP = -(1.0 / 11.);
-    //
+    public static final double shooterDistanceFar_kP = -(1.0 / 10); 
+    
+    // FIX THIS TO SOMETHING MORE ABSTRACT - MUY IMPORTANTE
+    
 }

@@ -108,9 +108,11 @@ public class Intake {
         if (bPressed){
             feedMotor.set(ControlMode.PercentOutput, Variables.feedShootSpeed);
             conveyorMotor.set(ControlMode.PercentOutput, Variables.conveyorShootSpeed);
+            setSpeed(Variables.intakeMotorSpeed);
         } else {
             conveyorMotor.set(ControlMode.PercentOutput, 0);
             feedMotor.set(ControlMode.PercentOutput, 0);
+            setSpeed(0);
         }
     }
 
@@ -124,13 +126,14 @@ public class Intake {
             colorFlap.set(0);
         }
         else {
-            colorFlap.set(-0.6);
+            colorFlap.set(-1); //-0.6
         }
         
     }
 
     public void setColorFlapDown() {
 
+        
         if(!colorSenseDown.get()) {
             colorFlap.set(0);
         }
